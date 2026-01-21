@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Confession - Unsaid</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  background:#070710;
+  font-family:'Orbitron','Roboto',sans-serif;
+  color:#e6e6ff;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ===== BACKGROUND IMAGE + OVERLAY ===== */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url('images/submit-bg.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  opacity:0.15;
+  z-index:-3;
+}
+
+/* ===== BACKGROUND PARTICLES ===== */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:-2;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(6,6,15,.85) 0%, rgba(10,5,20,.9) 50%, rgba(6,6,15,.85) 100%);
+  z-index:-1;
+  backdrop-filter:blur(2px);
+}
+
+/* ===== NAVBAR ===== */
+.nav{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:18px 40px;
+  background:rgba(12,12,25,.95);
+  box-shadow:0 0 25px #ff00ff,0 0 35px #00ffff;
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(15px);
+  border-bottom:2px solid rgba(255,0,255,.3);
+}
+.nav-left{
+  display:flex;
+  flex-direction:column;
+}
+.logo{
+  font-size:1.9rem;
+  font-weight:900;
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff;
+  cursor:pointer;
+  transition:.3s;
+}
+.logo:hover{
+  text-shadow:0 0 20px #ff00ff,0 0 40px #00ffff;
+  transform:scale(1.05);
+}
+.date{
+  font-size:.85rem;
+  color:#00ffff;
+  opacity:.9;
+}
+.nav-center{
+  display:flex;
+  gap:34px;
+  justify-content:center;
+}
+.nav-center a{
+  position:relative;
+  padding:8px 14px;
+  color:#bffcff;
+  text-decoration:none;
+  font-weight:700;
+  transition:.3s;
+}
+.nav-center a:hover{
+  color:#ff00ff;
+  text-shadow:0 0 6px #ff00ff,0 0 14px #00ffff;
+  transform:translateY(-2px);
+}
+.nav-center a:hover::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-6px;
+  height:3px;
+  background:linear-gradient(90deg,#ff00ff,#00ffff);
+  box-shadow:0 0 12px #ff00ff;
+  animation:glow 1.5s ease-in-out infinite;
+}
+.nav-right{
+  display:flex;
+  justify-content:flex-end;
+}
+.digital-clock{
+  padding:10px 22px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#ff00ff;
+  border:2px solid #ff00ff;
+  border-radius:8px;
+  background:linear-gradient(180deg,#0c0c1f,#05050c);
+  box-shadow:0 0 20px #ff00ff,inset 0 0 15px #00ffff;
+  text-shadow:0 0 12px #ff00ff;
+  animation:pulse 2s ease-in-out infinite;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.wrapper{
+  min-height:calc(100vh - 100px);
+  display:grid;
+  grid-template-columns:280px 1fr 280px;
+  gap:30px;
+  padding:60px 25px;
+  max-width:1400px;
+  margin:0 auto;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:sticky;
+  top:120px;
+  height:fit-content;
+}
+
+.sidebar-card{
+  background:rgba(20,20,35,.90);
+  border-radius:20px;
+  padding:25px;
+  margin-bottom:20px;
+  border:1px solid rgba(255,0,255,.3);
+  box-shadow:0 0 25px rgba(255,0,255,.4);
+  animation:fadeInUp 0.8s ease;
+}
+
+.sidebar-card h3{
+  color:#ff00ff;
+  font-size:1.2rem;
+  margin-bottom:20px;
+  text-shadow:0 0 10px #ff00ff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* WRITING TIPS */
+.tip-item{
+  padding:15px;
+  margin-bottom:12px;
+  background:rgba(0,255,255,.05);
+  border-radius:12px;
+  border-left:4px solid #00ffff;
+  transition:.3s;
+  cursor:pointer;
+}
+
+.tip-item:hover{
+  background:rgba(0,255,255,.12);
+  transform:translateX(5px);
+  box-shadow:0 0 15px rgba(0,255,255,.3);
+}
+
+.tip-title{
+  color:#00ffff;
+  font-weight:700;
+  margin-bottom:5px;
+  font-size:.95rem;
+}
+
+.tip-desc{
+  color:#bffcff;
+  font-size:.85rem;
+  opacity:.85;
+  line-height:1.5;
+}
+
+/* CATEGORY PREVIEW */
+.cat-preview{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.cat-item{
+  padding:12px;
+  background:rgba(255,0,255,.08);
+  border-radius:12px;
+  text-align:center;
+  font-size:.85rem;
+  font-weight:700;
+  color:#ff00ff;
+  border:1px solid rgba(255,0,255,.2);
+  transition:.3s;
+  cursor:pointer;
+}
+
+.cat-item:hover{
+  background:rgba(255,0,255,.2);
+  transform:scale(1.05);
+  box-shadow:0 0 15px rgba(255,0,255,.5);
+}
+
+/* MOOD TRACKER */
+.mood-selector{
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.mood-btn{
+  font-size:2rem;
+  cursor:pointer;
+  transition:.3s;
+  padding:10px;
+  border-radius:50%;
+  background:rgba(255,0,255,.05);
+  border:2px solid transparent;
+}
+
+.mood-btn:hover{
+  transform:scale(1.3) rotate(10deg);
+  background:rgba(255,0,255,.15);
+  border-color:#ff00ff;
+  box-shadow:0 0 20px rgba(255,0,255,.5);
+}
+
+.mood-btn.selected{
+  background:rgba(255,0,255,.2);
+  border-color:#ff00ff;
+  box-shadow:0 0 20px #ff00ff;
+  animation:pulse 2s infinite;
+}
+
+/* STATS */
+.stat-box{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  background:rgba(255,0,255,.08);
+  border-radius:12px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,0,255,.2);
+}
+
+.stat-label{
+  color:#bffcff;
+  font-size:.9rem;
+}
+
+.stat-value{
+  color:#ff00ff;
+  font-weight:900;
+  font-size:1.3rem;
+  text-shadow:0 0 10px #ff00ff;
+}
+
+/* INSPIRATIONAL QUOTE */
+.quote-box{
+  padding:20px;
+  background:rgba(0,255,255,.05);
+  border-radius:15px;
+  border:1px solid rgba(0,255,255,.3);
+  position:relative;
+  overflow:hidden;
+}
+
+.quote-box::before{
+  content:'"';
+  position:absolute;
+  top:-10px;
+  left:10px;
+  font-size:5rem;
+  color:rgba(255,0,255,.2);
+  font-family:Georgia;
+}
+
+.quote-text{
+  color:#bffcff;
+  font-style:italic;
+  font-size:1rem;
+  line-height:1.6;
+  position:relative;
+  z-index:1;
+  transition:opacity 0.3s ease;
+}
+
+.quote-author{
+  color:#00ffff;
+  font-size:.85rem;
+  margin-top:10px;
+  text-align:right;
+}
+
+/* ===== CARD (ENHANCED) ===== */
+.card{
+  background:rgba(20,20,35,.90);
+  padding:60px;
+  border-radius:35px;
+  box-shadow:0 0 60px rgba(255,0,255,.6),0 0 100px rgba(0,255,255,.4);
+  position:relative;
+  overflow:hidden;
+  border:2px solid rgba(255,0,255,.3);
+  animation:fadeInUp 0.8s ease;
+  align-self:start;
+}
+
+.card::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg, transparent, rgba(255,0,255,.08), transparent);
+  transform:rotate(45deg);
+  animation:shimmer 3s ease-in-out infinite;
+}
+
+/* ===== HEADER ===== */
+.card-header{
+  text-align:center;
+  margin-bottom:35px;
+  position:relative;
+  z-index:1;
+}
+
+.card-header h2{
+  font-size:2.5rem;
+  color:#ff00ff;
+  text-shadow:0 0 15px #ff00ff,0 0 30px #00ffff;
+  margin-bottom:12px;
+  animation:glow 2s ease-in-out infinite;
+}
+
+.card-header p{
+  color:#bffcff;
+  font-size:1.05rem;
+  opacity:.85;
+}
+
+/* ===== GOOGLE FORM LINK (NEW) ===== */
+.google-form-section{
+  position:relative;
+  z-index:1;
+  margin-bottom:30px;
+  padding:25px;
+  background:rgba(0,255,255,.08);
+  border-radius:20px;
+  border:2px solid rgba(0,255,255,.3);
+  text-align:center;
+}
+
+.google-form-section h3{
+  color:#00ffff;
+  font-size:1.3rem;
+  margin-bottom:15px;
+  text-shadow:0 0 10px #00ffff;
+}
+
+.google-form-section p{
+  color:#bffcff;
+  font-size:.95rem;
+  margin-bottom:20px;
+  line-height:1.6;
+}
+
+.google-form-btn{
+  display:inline-block;
+  padding:15px 35px;
+  background:linear-gradient(90deg,#00ffff,#0099ff);
+  color:#000;
+  text-decoration:none;
+  font-weight:900;
+  font-size:1.1rem;
+  border-radius:15px;
+  box-shadow:0 0 30px rgba(0,255,255,.6);
+  transition:.4s;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  position:relative;
+  overflow:hidden;
+}
+
+.google-form-btn::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transform:translate(-50%,-50%);
+  transition:.6s;
+}
+
+.google-form-btn:hover::before{
+  width:300px;
+  height:300px;
+}
+
+.google-form-btn:hover{
+  box-shadow:0 0 50px #00ffff,0 0 80px #0099ff;
+  transform:translateY(-3px) scale(1.05);
+}
+
+.google-form-btn:active{
+  transform:translateY(0) scale(0.98);
+}
+
+/* ===== DIVIDER (NEW) ===== */
+.divider{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  margin:35px 0;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.divider::before,
+.divider::after{
+  content:'';
+  flex:1;
+  height:2px;
+  background:linear-gradient(90deg, transparent, rgba(255,0,255,.5), transparent);
+}
+
+.divider span{
+  color:#ff00ff;
+  font-weight:700;
+  font-size:1.1rem;
+  text-shadow:0 0 10px #ff00ff;
+  padding:0 15px;
+}
+
+/* ===== FORM ===== */
+form{
+  position:relative;
+  z-index:1;
+}
+
+/* Character Counter */
+.textarea-wrapper{
+  position:relative;
+  margin-bottom:22px;
+}
+
+textarea{
+  width:100%;
+  height:200px;
+  background:rgba(5,5,12,.8);
+  border:2px solid rgba(0,255,255,.3);
+  border-radius:18px;
+  padding:20px;
+  color:white;
+  font-size:1.05rem;
+  line-height:1.6;
+  resize:vertical;
+  transition:.3s;
+  box-shadow:inset 0 0 20px rgba(0,255,255,.1);
+}
+
+textarea:focus{
+  outline:none;
+  border-color:#ff00ff;
+  box-shadow:0 0 25px rgba(255,0,255,.5),inset 0 0 30px rgba(255,0,255,.2);
+}
+
+.char-counter{
+  position:absolute;
+  bottom:12px;
+  right:18px;
+  font-size:.85rem;
+  color:#00ffff;
+  opacity:.7;
+  font-weight:700;
+}
+
+/* ===== SELECT ===== */
+.select-wrapper{
+  position:relative;
+  margin-bottom:25px;
+}
+
+select{
+  width:100%;
+  background:rgba(5,5,12,.8);
+  border:2px solid rgba(0,255,255,.3);
+  border-radius:18px;
+  padding:18px 20px;
+  color:white;
+  font-size:1.05rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.3s;
+  appearance:none;
+  box-shadow:inset 0 0 20px rgba(0,255,255,.1);
+}
+
+select:focus{
+  outline:none;
+  border-color:#ff00ff;
+  box-shadow:0 0 25px rgba(255,0,255,.5);
+}
+
+.select-wrapper::after{
+  content:'▼';
+  position:absolute;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#00ffff;
+  pointer-events:none;
+  font-size:.9rem;
+}
+
+option{
+  background:#0c0c1f;
+  padding:10px;
+}
+
+/* ===== BUTTON ===== */
+button{
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:20px;
+  font-weight:900;
+  font-size:1.15rem;
+  cursor:pointer;
+  background:linear-gradient(90deg,#ff00ff,#00ffff);
+  color:#000;
+  box-shadow:0 0 30px rgba(255,0,255,.6);
+  transition:.4s;
+  position:relative;
+  overflow:hidden;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+button::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.3);
+  transform:translate(-50%,-50%);
+  transition:.6s;
+}
+
+button:hover::before{
+  width:400px;
+  height:400px;
+}
+
+button:hover{
+  box-shadow:0 0 50px #ff00ff,0 0 80px #00ffff;
+  transform:translateY(-3px) scale(1.02);
+}
+
+button:active{
+  transform:translateY(0) scale(0.98);
+}
+
+/* ===== TIPS SECTION ===== */
+.tips{
+  margin-top:30px;
+  padding:20px;
+  background:rgba(0,255,255,.05);
+  border-radius:15px;
+  border-left:4px solid #00ffff;
+}
+
+.tips h4{
+  color:#00ffff;
+  margin-bottom:10px;
+  font-size:1.05rem;
+}
+
+.tips ul{
+  list-style:none;
+  padding:0;
+}
+
+.tips li{
+  padding:6px 0;
+  color:#bffcff;
+  font-size:.95rem;
+  opacity:.9;
+}
+
+.tips li::before{
+  content:'✨ ';
+  margin-right:8px;
+}
+
+/* ===== BACK LINK ===== */
+.back{
+  text-align:center;
+  margin-top:25px;
+}
+
+.back a{
+  color:#00ffff;
+  text-decoration:none;
+  font-weight:700;
+  font-size:1.05rem;
+  transition:.3s;
+  display:inline-block;
+}
+
+.back a:hover{
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff;
+  transform:translateX(-5px);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes shimmer{
+  0%{transform:rotate(45deg) translate(-100%,-100%);}
+  100%{transform:rotate(45deg) translate(100%,100%);}
+}
+
+@keyframes glow{
+  0%,100%{text-shadow:0 0 15px #ff00ff,0 0 30px #00ffff;}
+  50%{text-shadow:0 0 25px #ff00ff,0 0 50px #00ffff;}
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 20px #ff00ff,inset 0 0 15px #00ffff;}
+  50%{box-shadow:0 0 30px #ff00ff,inset 0 0 25px #00ffff;}
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:1200px){
+  .wrapper{
+    grid-template-columns:1fr;
+    padding:40px 15px;
+  }
+  .sidebar{display:none;}
+  .card{padding:40px 30px;}
+  .card-header h2{font-size:2rem;}
+  textarea{height:180px;}
+}
+
+@media(max-width:900px){
+  .nav{grid-template-columns:1fr;text-align:center;gap:15px;}
+  .nav-right{justify-content:center;}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVBAR -->
+<div class="nav">
+  <div class="nav-left">
+    <div class="logo" onclick="window.location.href='home.html'">UNSAID</div>
+    <div class="date" id="date"></div>
+  </div>
+
+  <div class="nav-center">
+    <a href="home.html" class="nav-link">Home</a>
+    <a href="feed.html" class="nav-link">Feed</a>
+    <a href="submit.html" class="nav-link"style="color: #ff00ff;">Submit</a>
+    <a href="profile.html" class="nav-link">Profile</a>
+    <a href="achievement.html" class="nav-link">Achievement</a>
+    <a href="help.html" class="nav-link">Help</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="digital-clock" id="clock">00:00:00</div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="wrapper">
+  
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <h3>✏️ Writing Tips</h3>
+      <div class="tip-item">
+        <div class="tip-title">Be Authentic</div>
+        <div class="tip-desc">Share your truth without filters</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-title">Express Freely</div>
+        <div class="tip-desc">No judgment, just pure emotion</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-title">Take Your Time</div>
+        <div class="tip-desc">Let your thoughts flow naturally</div>
+      </div>
+      <div class="tip-item">
+        <div class="tip-title">Release & Heal</div>
+        <div class="tip-desc">Sharing is the first step to healing</div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>🎭 How are you feeling?</h3>
+      <div class="mood-selector">
+        <div class="mood-btn" title="Happy">😊</div>
+        <div class="mood-btn" title="Sad">😢</div>
+        <div class="mood-btn" title="Angry">😠</div>
+        <div class="mood-btn" title="Anxious">😰</div>
+        <div class="mood-btn" title="Hopeful">🌟</div>
+        <div class="mood-btn" title="Heartbroken">💔</div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>📊 Your Impact</h3>
+      <div class="stat-box">
+        <span class="stat-label">Stories Shared</span>
+        <span class="stat-value" id="userStories">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">Hearts Touched</span>
+        <span class="stat-value" id="userReach">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER FORM -->
+  <div class="card">
+    <div class="card-header">
+      <h2>💌 Share Your Story</h2>
+      <p>Your voice matters. Express what you've kept unsaid.</p>
+    </div>
+
+    <!-- GOOGLE FORM OPTION (NEW) -->
+    <div class="google-form-section">
+      <h3>📝 Submit via Google Form</h3>
+      <p>Prefer to share your confession through a secure Google Form? Click the button below to open our submission form in a new tab.</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtRiP5g2ZaBZmVjqx6XJeTa5Sef5EfCebLvwHSKGPExzMgrQ/viewform?usp=header" target="_blank" class="google-form-btn">
+        🌐 Open Google Form
+      </a>
+    </div>
+
+    <!-- DIVIDER (NEW) -->
+    <div class="divider">
+      <span>OR</span>
+    </div>
+
+    <!-- ORIGINAL FORM -->
+    <form id="confessionForm">
+      <div class="textarea-wrapper">
+        <textarea 
+          name="text" 
+          id="confessionText"
+          placeholder="Pour your heart out... What have you been keeping inside?"
+          required
+          maxlength="1000"
+        ></textarea>
+        <span class="char-counter" id="charCounter">0 / 1000</span>
+      </div>
+
+      <div class="select-wrapper">
+        <select name="category" required id="categorySelect">
+          <option value="">Select a category</option>
+          <option value="Love">💔 Love & Heartbreak</option>
+          <option value="Sadness">😢 Sadness & Grief</option>
+          <option value="Regret">😔 Regret & Mistakes</option>
+          <option value="Anger">😠 Anger & Frustration</option>
+          <option value="Joy">😊 Joy & Happiness</option>
+          <option value="Fear">😰 Fear & Anxiety</option>
+          <option value="Hope">🌟 Hope & Dreams</option>
+          <option value="Secret">🤫 Secret Confession</option>
+        </select>
+      </div>
+
+      <button type="submit">✨ Send to the Universe</button>
+    </form>
+
+    <div class="tips">
+      <h4>💡 Remember:</h4>
+      <ul>
+        <li>Be honest and authentic</li>
+        <li>Your confession is anonymous to other users</li>
+        <li>Express your feelings without judgment</li>
+        <li>Release what you've been holding inside</li>
+      </ul>
+    </div>
+
+    <div class="back">
+      <a href="feed.html">← Back to Feed</a>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card">
+      <h3>📚 Categories</h3>
+      <div class="cat-preview">
+        <div class="cat-item" onclick="selectCat('Love')">💔 Love</div>
+        <div class="cat-item" onclick="selectCat('Sadness')">😢 Sadness</div>
+        <div class="cat-item" onclick="selectCat('Regret')">😔 Regret</div>
+        <div class="cat-item" onclick="selectCat('Anger')">😠 Anger</div>
+        <div class="cat-item" onclick="selectCat('Joy')">😊 Joy</div>
+        <div class="cat-item" onclick="selectCat('Fear')">😰 Fear</div>
+        <div class="cat-item" onclick="selectCat('Hope')">🌟 Hope</div>
+        <div class="cat-item" onclick="selectCat('Secret')">🤫 Secret</div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>💭 Inspiration</h3>
+      <div class="quote-box">
+        <p class="quote-text" id="quoteText">The bravest thing you can do is share what's in your heart.</p>
+        <p class="quote-author">— Anonymous</p>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>🌟 Why Share?</h3>
+      <p style="color:#bffcff;line-height:1.6;font-size:.9rem;">
+        Expressing your emotions anonymously can reduce stress, improve mental clarity, and help you connect with others who understand. You're creating a safe space for yourself and others. 💜
+      </p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3>🔒 Privacy First</h3>
+      <p style="color:#bffcff;line-height:1.6;font-size:.9rem;">
+        Your identity remains protected. Share freely, knowing your story is anonymous to the community while helping others feel less alone. ✨
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// DATE
+function updateDate(){
+  const d=new Date();
+  const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  document.getElementById("date").innerText =
+    days[d.getDay()]+" • "+d.toLocaleDateString();
+}
+updateDate();
+
+// CLOCK
+function updateClock(){
+  const n=new Date();
+  document.getElementById("clock").innerText =
+    String(n.getHours()).padStart(2,'0')+":"+
+    String(n.getMinutes()).padStart(2,'0')+":"+
+    String(n.getSeconds()).padStart(2,'0');
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// PARTICLES - ENHANCED
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+let particles=[];
+for(let i=0;i<100;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2.5+1,
+    dx:(Math.random()-.5)*.5,
+    dy:(Math.random()-.5)*.5,
+    color:Math.random()>.5?'#ff00ff':'#00ffff'
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.fillStyle=p.color;
+    ctx.globalAlpha=0.6;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// CHARACTER COUNTER
+const textarea = document.getElementById('confessionText');
+const counter = document.getElementById('charCounter');
+
+textarea.addEventListener('input', function(){
+  const count = this.value.length;
+  counter.textContent = count + ' / 1000';
+  
+  // Color change based on length
+  if(count > 900){
+    counter.style.color = '#ff00ff';
+  } else if(count > 700){
+    counter.style.color = '#ffff00';
+  } else {
+    counter.style.color = '#00ffff';
+  }
+});
+
+// FORM SUBMISSION
+const form = document.getElementById('confessionForm');
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  
+  const btn = this.querySelector('button');
+  const text = document.getElementById('confessionText').value;
+  const category = document.getElementById('categorySelect').value;
+  
+  // Animation
+  btn.textContent = '✨ Sending...';
+  btn.style.background = 'linear-gradient(90deg,#00ffff,#ff00ff,#00ffff)';
+  btn.style.backgroundSize = '200% 100%';
+  btn.style.animation = 'gradientShift 1s ease infinite';
+  
+  // Simulate submission
+  setTimeout(() => {
+    // Save to localStorage
+    const confessions = JSON.parse(localStorage.getItem('confessions') || '[]');
+    const newConfession = {
+      id: Date.now(),
+      text: text,
+      category: category,
+      date: new Date().toISOString(),
+      likes: 0,
+      comments: []
+    };
+    confessions.unshift(newConfession);
+    localStorage.setItem('confessions', JSON.stringify(confessions));
+    
+    // Success message
+    btn.textContent = '✓ Sent Successfully!';
+    btn.style.background = 'linear-gradient(90deg,#00ff00,#00ffaa)';
+    btn.style.animation = 'none';
+    
+    // Redirect to feed
+    setTimeout(() => {
+      window.location.href = 'feed.html';
+    }, 1500);
+  }, 2000);
+});
+
+// AUTO-RESIZE TEXTAREA
+textarea.addEventListener('input', function(){
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 400) + 'px';
+});
+
+// MOOD SELECTOR
+document.querySelectorAll('.mood-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+
+// CATEGORY QUICK SELECT
+function selectCat(cat){
+  document.getElementById('categorySelect').value = cat;
+  document.getElementById('categorySelect').style.animation = 'pulse 0.5s ease';
+  setTimeout(()=>{
+    document.getElementById('categorySelect').style.animation = '';
+  },500);
+}
+
+// ROTATING QUOTES
+const quotes = [
+  { text: "The bravest thing you can do is share what's in your heart.", author: "Anonymous" },
+  { text: "Your story might be the light someone needs in their darkness.", author: "Unknown" },
+  { text: "Vulnerability is not weakness; it's courage.", author: "Brené Brown" },
+  { text: "Healing begins when we dare to speak our truth.", author: "Unknown" },
+  { text: "You are not alone in what you feel.", author: "Community" }
+];
+
+let quoteIndex = 0;
+function rotateQuote(){
+  quoteIndex = (quoteIndex + 1) % quotes.length;
+  const quoteEl = document.getElementById('quoteText');
+  quoteEl.style.opacity = '0';
+  setTimeout(()=>{
+    quoteEl.textContent = quotes[quoteIndex].text;
+    quoteEl.style.opacity = '1';
+  },300);
+}
+setInterval(rotateQuote, 8000);
+
+// ANIMATE USER STATS
+function animateStats(){
+  const stories = Math.floor(Math.random()*20)+5;
+  const reach = Math.floor(Math.random()*200)+50;
+  
+  animateValue('userStories', 0, stories, 2000);
+  animateValue('userReach', 0, reach, 2500);
+}
+
+function animateValue(id, start, end, duration){
+  const element = document.getElementById(id);
+  const range = end - start;
+  const increment = range / (duration / 16);
+  let current = start;
+  
+  const timer = setInterval(()=>{
+    current += increment;
+    if(current >= end){
+      current = end;
+      clearInterval(timer);
+    }
+    element.textContent = Math.floor(current);
+  }, 16);
+}
+
+setTimeout(animateStats, 1000);
+
+// RESIZE CANVAS ON WINDOW RESIZE
+window.addEventListener('resize', ()=>{
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | UNSAID</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#070710;
+  font-family:'Orbitron','Roboto',sans-serif;
+  color:#e6e6ff;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ===== BACKGROUND IMAGE + OVERLAY ===== */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url('images/profile-bg.jpg');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  opacity:0.15;
+  z-index:-3;
+}
+
+/* ===== PARTICLES ===== */
+#particles{position:fixed;inset:0;z-index:-2;}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg, rgba(6,6,15,.85) 0%, rgba(10,5,20,.9) 50%, rgba(6,6,15,.85) 100%);
+  z-index:-1;
+  backdrop-filter:blur(2px);
+}
+
+/* ===== NAVBAR ===== */
+.nav{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  padding:18px 40px;
+  background:rgba(12,12,25,.95);
+  box-shadow:0 0 25px #ff00ff,0 0 35px #00ffff;
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(15px);
+  border-bottom:2px solid rgba(255,0,255,.3);
+}
+.nav-left{display:flex;flex-direction:column;}
+.logo{
+  font-size:1.9rem;
+  font-weight:900;
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff,0 0 25px #00ffff;
+  cursor:pointer;
+  transition:.3s;
+}
+.logo:hover{
+  text-shadow:0 0 20px #ff00ff,0 0 40px #00ffff;
+  transform:scale(1.05);
+}
+.date{font-size:.85rem;color:#00ffff;opacity:.9;}
+.nav-center{
+  display:flex;
+  gap:34px;
+  justify-content:center;
+}
+.nav-center a{
+  position:relative;
+  padding:8px 14px;
+  color:#bffcff;
+  text-decoration:none;
+  font-weight:700;
+  transition:.3s;
+}
+.nav-center a:hover{
+  color:#ff00ff;
+  text-shadow:0 0 6px #ff00ff,0 0 14px #00ffff;
+  transform:translateY(-2px);
+}
+.nav-center a:hover::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-6px;
+  height:3px;
+  background:linear-gradient(90deg,#ff00ff,#00ffff);
+  box-shadow:0 0 12px #ff00ff;
+  animation:glow 1.5s ease-in-out infinite;
+}
+.nav-right{
+  display:flex;
+  justify-content:flex-end;
+}
+.digital-clock{
+  padding:10px 22px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#ff00ff;
+  border:2px solid #ff00ff;
+  border-radius:8px;
+  background:linear-gradient(180deg,#0c0c1f,#05050c);
+  box-shadow:0 0 20px #ff00ff,inset 0 0 15px #00ffff;
+  text-shadow:0 0 12px #ff00ff;
+  animation:pulse 2s ease-in-out infinite;
+}
+
+/* ===== PROFILE WRAPPER ===== */
+.wrapper{
+  padding:60px 20px;
+  display:flex;
+  justify-content:center;
+  align-items:stretch;
+  gap:0;
+  min-height:calc(100vh - 80px);
+}
+
+/* ===== LEFT SIDEBAR ===== */
+.sidebar-left{
+  flex:0 0 280px;
+  background:linear-gradient(180deg, rgba(255,0,255,.15) 0%, rgba(0,255,255,.08) 100%);
+  border-right:2px solid rgba(255,0,255,.3);
+  padding:40px 25px;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  animation:slideInLeft 0.8s ease;
+}
+
+.left-card{
+  background:rgba(20,20,35,.95);
+  padding:25px;
+  border-radius:20px;
+  border:2px solid rgba(255,0,255,.3);
+  box-shadow:0 0 30px rgba(255,0,255,.3);
+  position:relative;
+  overflow:hidden;
+}
+
+.left-card::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg, transparent, rgba(255,0,255,.08), transparent);
+  transform:rotate(45deg);
+  animation:shimmer 4s ease-in-out infinite;
+}
+
+.left-card-content{
+  position:relative;
+  z-index:1;
+}
+
+.left-card h5{
+  font-size:1rem;
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff;
+  margin-bottom:15px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.stat-row{
+  background:rgba(5,5,12,.7);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:8px;
+  border:1px solid rgba(0,255,255,.2);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:.3s;
+}
+
+.stat-row:hover{
+  box-shadow:0 0 15px rgba(255,0,255,.3);
+  transform:translateX(5px);
+}
+
+.stat-row span:first-child{
+  color:#00ffff;
+  font-size:0.9rem;
+}
+
+.stat-row span:last-child{
+  color:#ff00ff;
+  font-weight:900;
+  font-size:1.2rem;
+}
+
+.rank-display{
+  background:linear-gradient(135deg, rgba(255,0,255,.2), rgba(0,255,255,.1));
+  padding:15px;
+  border-radius:15px;
+  text-align:center;
+  border:2px solid rgba(255,0,255,.3);
+  margin-top:10px;
+}
+
+.rank-display p{
+  color:#00ffff;
+  font-size:0.85rem;
+  margin-bottom:8px;
+}
+
+.rank-name{
+  color:#ff00ff;
+  font-size:1.2rem;
+  font-weight:900;
+  text-shadow:0 0 10px #ff00ff;
+}
+
+/* ===== MAIN PROFILE CARD ===== */
+.profile-card{
+  flex:1;
+  background:rgba(20,20,35,.95);
+  border-radius:0;
+  padding:60px 80px;
+  box-shadow:0 0 80px rgba(255,0,255,.5),0 0 140px rgba(0,255,255,.3);
+  border-left:2px solid rgba(255,0,255,.3);
+  border-right:2px solid rgba(255,0,255,.3);
+  position:relative;
+  overflow:hidden;
+  animation:fadeInUp 0.8s ease;
+}
+
+.profile-card::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg, transparent, rgba(255,0,255,.08), transparent);
+  transform:rotate(45deg);
+  animation:shimmer 4s ease-in-out infinite;
+}
+
+/* ===== HEADER ===== */
+.profile-header{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  margin-bottom:50px;
+}
+
+.avatar-wrapper{
+  position:relative;
+  display:inline-block;
+  margin-bottom:25px;
+}
+
+.avatar{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#ff00ff,#00ffff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:4.5rem;
+  font-weight:900;
+  color:#05050c;
+  box-shadow:0 0 50px rgba(255,0,255,.8),0 0 80px rgba(0,255,255,.6);
+  position:relative;
+  animation:float 3s ease-in-out infinite;
+}
+
+.avatar::after{
+  content:'';
+  position:absolute;
+  inset:-10px;
+  border-radius:50%;
+  border:3px solid rgba(255,0,255,.3);
+  animation:spin 10s linear infinite;
+}
+
+.rank-badge{
+  position:absolute;
+  bottom:-15px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:10px 30px;
+  background:linear-gradient(135deg,#ff00ff,#00ffff);
+  color:#070710;
+  font-weight:900;
+  border-radius:30px;
+  box-shadow:0 0 30px #ff00ff;
+  font-size:.9rem;
+  letter-spacing:2px;
+}
+
+h2{
+  font-size:2.8rem;
+  color:#00ffff;
+  text-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;
+  margin-bottom:12px;
+  animation:glow 2s ease-in-out infinite;
+}
+
+.xp-display{
+  font-size:1.3rem;
+  color:#ff00ff;
+  font-weight:700;
+  text-shadow:0 0 10px #ff00ff;
+  margin-bottom:20px;
+}
+
+.level-progress{
+  width:100%;
+  height:10px;
+  background:rgba(5,5,12,.8);
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid rgba(0,255,255,.3);
+  margin-bottom:10px;
+}
+
+.level-progress-bar{
+  height:100%;
+  background:linear-gradient(90deg, #00ffff, #ff00ff);
+  box-shadow:0 0 15px #ff00ff;
+  width:0%;
+  transition:width 1s ease;
+}
+
+.xp-text{
+  font-size:0.85rem;
+  color:#bffcff;
+  text-align:center;
+}
+
+/* ===== STATS GRID ===== */
+.stats{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:25px;
+  position:relative;
+  z-index:1;
+}
+
+.stat{
+  background:rgba(5,5,12,.8);
+  border-radius:20px;
+  padding:30px 20px;
+  text-align:center;
+  border:2px solid rgba(0,255,255,.3);
+  transition:.4s;
+  position:relative;
+  overflow:hidden;
+}
+
+.stat::before{
+  content:'';
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:0;
+  height:0;
+  background:radial-gradient(circle, rgba(255,0,255,.2), transparent);
+  transform:translate(-50%,-50%);
+  transition:.5s;
+  border-radius:50%;
+}
+
+.stat:hover::before{
+  width:150px;
+  height:150px;
+}
+
+.stat:hover{
+  transform:translateY(-8px) scale(1.08);
+  box-shadow:0 0 40px #00ffff,0 0 60px #ff00ff;
+  border-color:#ff00ff;
+}
+
+.stat h3{
+  font-size:2.8rem;
+  color:#00ffff;
+  text-shadow:0 0 15px #00ffff;
+  margin-bottom:5px;
+  position:relative;
+  z-index:1;
+}
+
+.stat p{
+  font-size:0.9rem;
+  color:#bffcff;
+  font-weight:600;
+  position:relative;
+  z-index:1;
+}
+
+/* ===== ACHIEVEMENTS ===== */
+.achievement{
+  margin-top:50px;
+  position:relative;
+  z-index:1;
+}
+
+.achievement h4{
+  font-size:1.8rem;
+  color:#ff00ff;
+  text-shadow:0 0 15px #ff00ff;
+  margin-bottom:25px;
+  text-align:center;
+}
+
+.achievement-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.badge{
+  background:rgba(5,5,12,.8);
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  transition:.4s;
+  border:2px solid rgba(0,255,255,.2);
+  position:relative;
+  overflow:hidden;
+}
+
+.badge::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg, transparent, rgba(0,255,255,.1), transparent);
+  transform:rotate(45deg);
+  transition:.5s;
+}
+
+.badge:hover::before{
+  left:100%;
+}
+
+.badge.locked{
+  opacity:.35;
+  filter:grayscale(100%);
+}
+
+.badge.unlocked{
+  box-shadow:0 0 40px rgba(255,0,255,.6),0 0 60px rgba(0,255,255,.4);
+  border-color:#ff00ff;
+  animation:unlockPulse 2s ease-in-out infinite;
+}
+
+.badge:hover{
+  transform:translateY(-8px) scale(1.05);
+}
+
+.icon{
+  font-size:3.5rem;
+  margin-bottom:10px;
+  display:block;
+  filter:drop-shadow(0 0 15px #00ffff);
+  position:relative;
+  z-index:1;
+}
+
+.badge.unlocked .icon{
+  animation:bounce 2s ease-in-out infinite;
+}
+
+.badge b{
+  display:block;
+  font-size:1.1rem;
+  color:#00ffff;
+  margin-bottom:5px;
+  position:relative;
+  z-index:1;
+}
+
+.badge p{
+  opacity:.85;
+  margin-bottom:8px;
+  font-size:.85rem;
+  position:relative;
+  z-index:1;
+}
+
+.badge small{
+  font-size:.8rem;
+  color:#ff00ff;
+  font-weight:700;
+  position:relative;
+  z-index:1;
+}
+
+.progress{
+  height:6px;
+  background:rgba(17,17,34,.8);
+  border-radius:10px;
+  margin-top:10px;
+  overflow:hidden;
+  border:1px solid rgba(0,255,255,.3);
+  position:relative;
+  z-index:1;
+}
+
+.bar{
+  height:100%;
+  background:linear-gradient(90deg,#00ffff,#ff00ff);
+  box-shadow:0 0 15px #ff00ff;
+  transition:width 1s ease;
+}
+
+/* ===== BIO ===== */
+.bio{
+  margin-top:40px;
+  background:rgba(5,5,12,.8);
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 0 40px rgba(0,255,255,.4);
+  border:2px solid rgba(0,255,255,.3);
+  position:relative;
+  z-index:1;
+}
+
+.bio h4{
+  font-size:1.4rem;
+  color:#ff00ff;
+  text-shadow:0 0 12px #ff00ff;
+  margin-bottom:15px;
+}
+
+.bio p{
+  font-size:1rem;
+  color:#dcdcff;
+  line-height:1.6;
+}
+
+/* ===== RIGHT SIDEBAR ===== */
+.sidebar-right{
+  flex:0 0 280px;
+  background:linear-gradient(180deg, rgba(0,255,255,.1) 0%, rgba(255,0,255,.12) 100%);
+  border-left:2px solid rgba(0,255,255,.3);
+  padding:40px 25px;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  animation:slideInRight 0.8s ease;
+}
+
+.right-card{
+  background:rgba(20,20,35,.95);
+  padding:25px;
+  border-radius:20px;
+  border:2px solid rgba(0,255,255,.3);
+  box-shadow:0 0 30px rgba(0,255,255,.3);
+  position:relative;
+  overflow:hidden;
+}
+
+.right-card::before{
+  content:'';
+  position:absolute;
+  top:-50%;
+  left:-50%;
+  width:200%;
+  height:200%;
+  background:linear-gradient(45deg, transparent, rgba(0,255,255,.08), transparent);
+  transform:rotate(45deg);
+  animation:shimmer 4s ease-in-out infinite;
+}
+
+.right-card-content{
+  position:relative;
+  z-index:1;
+}
+
+.right-card h5{
+  font-size:1rem;
+  color:#ff00ff;
+  text-shadow:0 0 10px #ff00ff;
+  margin-bottom:15px;
+  text-align:center;
+}
+
+.mini-badge{
+  background:rgba(5,5,12,.7);
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:8px;
+  border:1px solid rgba(255,0,255,.2);
+  text-align:center;
+  transition:.3s;
+}
+
+.mini-badge:hover{
+  box-shadow:0 0 15px rgba(255,0,255,.3);
+  transform:scale(1.05);
+}
+
+.mini-badge-icon{
+  font-size:2rem;
+  margin-bottom:5px;
+  display:block;
+}
+
+.mini-badge-text{
+  color:#00ffff;
+  font-size:0.85rem;
+  font-weight:700;
+}
+
+.achievement-count{
+  background:linear-gradient(135deg, rgba(255,0,255,.2), rgba(0,255,255,.1));
+  padding:15px;
+  border-radius:15px;
+  text-align:center;
+  border:2px solid rgba(0,255,255,.3);
+  margin-top:10px;
+}
+
+.achievement-count p{
+  color:#00ffff;
+  font-size:0.85rem;
+  margin-bottom:8px;
+}
+
+.achievement-count span{
+  color:#ff00ff;
+  font-size:1.8rem;
+  font-weight:900;
+  text-shadow:0 0 10px #ff00ff;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(40px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes slideInLeft{
+  from{opacity:0;transform:translateX(-40px);}
+  to{opacity:1;transform:translateX(0);}
+}
+
+@keyframes slideInRight{
+  from{opacity:0;transform:translateX(40px);}
+  to{opacity:1;transform:translateX(0);}
+}
+
+@keyframes shimmer{
+  0%{transform:rotate(45deg) translate(-100%,-100%);}
+  100%{transform:rotate(45deg) translate(100%,100%);}
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-15px);}
+}
+
+@keyframes spin{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+@keyframes glow{
+  0%,100%{text-shadow:0 0 20px #00ffff,0 0 40px #ff00ff;}
+  50%{text-shadow:0 0 30px #00ffff,0 0 60px #ff00ff;}
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 20px #ff00ff,inset 0 0 15px #00ffff;}
+  50%{box-shadow:0 0 30px #ff00ff,inset 0 0 25px #00ffff;}
+}
+
+@keyframes unlockPulse{
+  0%,100%{box-shadow:0 0 40px rgba(255,0,255,.6),0 0 60px rgba(0,255,255,.4);}
+  50%{box-shadow:0 0 50px rgba(255,0,255,.8),0 0 80px rgba(0,255,255,.6);}
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:1200px){
+  .wrapper{
+    flex-direction:column;
+    gap:0;
+  }
+  .sidebar-left, .sidebar-right{
+    flex:none;
+    width:100%;
+    border:none;
+    padding:30px 20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .sidebar-left{
+    border-bottom:2px solid rgba(255,0,255,.3);
+  }
+  .profile-card{
+    padding:40px 30px;
+    border-radius:0;
+  }
+}
+
+@media(max-width:900px){
+  .nav{grid-template-columns:1fr;text-align:center;gap:15px;}
+  .nav-right{justify-content:center;}
+  .stats{grid-template-columns:1fr 1fr;gap:20px;}
+  .achievement-grid{grid-template-columns:1fr 1fr;}
+  h2{font-size:2.2rem;}
+  .avatar{width:150px;height:150px;font-size:3.5rem;}
+  .sidebar-left, .sidebar-right{
+    grid-template-columns:1fr !important;
+  }
+}
+
+@media(max-width:600px){
+  .wrapper{
+    padding:30px 10px;
+  }
+  .profile-card{
+    padding:25px 15px;
+  }
+  .stats{
+    grid-template-columns:1fr;
+    gap:15px;
+  }
+  .achievement-grid{
+    grid-template-columns:1fr;
+  }
+  .nav{
+    padding:12px 15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVBAR -->
+<div class="nav">
+  <div class="nav-left">
+    <div class="logo" onclick="goToPage('home.html')">UNSAID</div>
+    <div class="date" id="date"></div>
+  </div>
+
+  <div class="nav-center">
+    <a href="home.html" class="nav-link">Home</a>
+    <a href="feed.html" class="nav-link">Feed</a>
+    <a href="submit.html" class="nav-link">Submit</a>
+    <a href="profile.html" class="nav-link"style="color: #ff00ff;">Profile</a>
+    <a href="achievement.html" class="nav-link">Achievement</a>
+    <a href="help.html" class="nav-link">Help</a>
+  </div>
+
+  <div class="nav-right">
+    <div class="digital-clock" id="clock">00:00:00</div>
+  </div>
+</div>
+
+<!-- MAIN WRAPPER -->
+<div class="wrapper">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar-left">
+    <div class="left-card">
+      <div class="left-card-content">
+        <h5>📊 Quick Stats</h5>
+        <div class="stat-row">
+          <span>Posted</span>
+          <span id="totalPosts">0</span>
+        </div>
+        <div class="stat-row">
+          <span>XP Total</span>
+          <span id="totalXP">0</span>
+        </div>
+        <div class="stat-row">
+          <span>Level XP</span>
+          <span id="levelXP">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-card">
+      <div class="left-card-content">
+        <h5>💭 Categories</h5>
+        <div class="stat-row">
+          <span>❤️ Love</span>
+          <span id="loveCat">0</span>
+        </div>
+        <div class="stat-row">
+          <span>😢 Sadness</span>
+          <span id="sadnessCat">0</span>
+        </div>
+        <div class="stat-row">
+          <span>😊 Joy</span>
+          <span id="joyCat">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="left-card">
+      <div class="left-card-content">
+        <h5 id="rankIconLeft">🌱 Rank</h5>
+        <div class="rank-display">
+          <p>Current Rank</p>
+          <div class="rank-name" id="rankNameLeft">First Whisper</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN PROFILE CARD -->
+  <div class="profile-card">
+
+    <!-- HEADER -->
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <div class="avatar" id="userAvatar">A</div>
+        <div class="rank-badge" id="rankBadge">🌱 First Whisper</div>
+      </div>
+      <h2 id="username">Anonymous</h2>
+      <div class="xp-display" id="xpDisplay">💎 0 XP Earned</div>
+      <div class="level-progress">
+        <div class="level-progress-bar" id="progressBar"></div>
+      </div>
+      <div class="xp-text" id="progressText">Level Progress: 0%</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat">
+        <h3 id="statTotal">0</h3>
+        <p>📝 Confessions</p>
+      </div>
+      <div class="stat">
+        <h3 id="statLove">0</h3>
+        <p>💔 Love</p>
+      </div>
+      <div class="stat">
+        <h3 id="statSadness">0</h3>
+        <p>😢 Sadness</p>
+      </div>
+      <div class="stat">
+        <h3 id="statJoy">0</h3>
+        <p>😊 Joy</p>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="achievement">
+      <h4>🏆 Achievements & Milestones</h4>
+      <div class="achievement-grid" id="achievementGrid">
+        <!-- Achievements will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- BIO -->
+    <div class="bio">
+      <h4>🧠 About Me</h4>
+      <p>
+        A silent soul navigating the UNSAID universe, expressing untold thoughts and emotions through anonymous confessions. Every word shared is a step toward healing and self-discovery. 💫
+      </p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar-right">
+    <div class="right-card">
+      <div class="right-card-content">
+        <h5>🎯 Achievement Progress</h5>
+        <div class="achievement-count">
+          <p>Unlocked</p>
+          <span id="unlockedCount">0/6</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-card">
+      <div class="right-card-content">
+        <h5>🌟 Next Milestone</h5>
+        <div class="mini-badge" id="nextMilestone">
+          <span class="mini-badge-icon">⚡</span>
+          <span class="mini-badge-text">Neon Rookie</span>
+          <p style="color:#bffcff;font-size:0.8rem;margin-top:5px;">5 confessions away</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-card">
+      <div class="right-card-content">
+        <h5>⚡ Streak Info</h5>
+        <div class="stat-row">
+          <span>Total Posts</span>
+          <span id="streakTotal">0</span>
+        </div>
+        <div class="stat-row">
+          <span>Current Rank</span>
+          <span style="font-size:1rem;" id="streakRank">First Whisper</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-card">
+      <div class="right-card-content">
+        <h5>🎨 Profile Stats</h5>
+        <div class="stat-row">
+          <span>Member Since</span>
+          <span style="font-size:0.9rem;">Unsaid</span>
+        </div>
+        <div class="achievement-count" style="margin-top:10px;">
+          <p>XP Level</p>
+          <span id="xpLevel">1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// DATE
+function updateDate(){
+  const d=new Date();
+  const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  document.getElementById("date").innerText =
+    days[d.getDay()]+" • "+d.toLocaleDateString();
+}
+updateDate();
+
+// CLOCK
+function updateClock(){
+  const n=new Date();
+  document.getElementById("clock").innerText =
+    String(n.getHours()).padStart(2,'0')+":"+
+    String(n.getMinutes()).padStart(2,'0')+":"+
+    String(n.getSeconds()).padStart(2,'0');
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// PARTICLES
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+let particles=[];
+for(let i=0;i<100;i++){
+  particles.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*2.5+1,
+    dx:(Math.random()-.5)*.5,
+    dy:(Math.random()-.5)*.5,
+    color:Math.random()>.5?'#ff00ff':'#00ffff'
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
+    ctx.fillStyle=p.color;
+    ctx.globalAlpha=0.6;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// RESIZE CANVAS
+window.addEventListener('resize',()=>{
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+});
+
+// PROFILE DATA
+const achievements = [
+  {title:"First Whisper", desc:"Submit your first confession", need:1, icon:"🌱"},
+  {title:"Neon Rookie", desc:"5 confessions submitted", need:5, icon:"⚡"},
+  {title:"Neon Coder", desc:"10 confessions submitted", need:10, icon:"💻"},
+  {title:"Neon Agent", desc:"20 confessions submitted", need:20, icon:"🕶️"},
+  {title:"Neon Master", desc:"50 confessions submitted", need:50, icon:"🔥"},
+  {title:"Neon Legend", desc:"100 confessions submitted", need:100, icon:"👑"}
+];
+
+// Calculate user stats from localStorage
+function calculateStats(){
+  const confessions = JSON.parse(localStorage.getItem('confessions') || '[]');
+  const username = localStorage.getItem('username') || 'Anonymous';
+  
+  // Count total and by category
+  const total = confessions.length;
+  const stats = {
+    total: total,
+    love: confessions.filter(c => c.category === 'Love').length,
+    sadness: confessions.filter(c => c.category === 'Sadness').length,
+    joy: confessions.filter(c => c.category === 'Joy').length,
+    regret: confessions.filter(c => c.category === 'Regret').length,
+    anger: confessions.filter(c => c.category === 'Anger').length,
+    fear: confessions.filter(c => c.category === 'Fear').length,
+    hope: confessions.filter(c => c.category === 'Hope').length,
+    secret: confessions.filter(c => c.category === 'Secret').length
+  };
+  
+  // Calculate XP
+  const xp = total * 10;
+  const levelXP = xp % 1000;
+  const level = Math.ceil(xp / 100);
+  
+  // Determine rank
+  let rank, rankIcon, rankColor;
+  if(xp >= 1000){
+    rank = "Neon Legend";
+    rankIcon = "👑";
+    rankColor = "linear-gradient(135deg,#ffd700,#ff00ff)";
+  } else if(xp >= 500){
+    rank = "Neon Master";
+    rankIcon = "🔥";
+    rankColor = "linear-gradient(135deg,#ff4500,#ff00ff)";
+  } else if(xp >= 200){
+    rank = "Neon Agent";
+    rankIcon = "🕶️";
+    rankColor = "linear-gradient(135deg,#7f00ff,#00ffff)";
+  } else if(xp >= 100){
+    rank = "Neon Coder";
+    rankIcon = "💻";
+    rankColor = "linear-gradient(135deg,#00ff88,#00ffff)";
+  } else if(xp >= 50){
+    rank = "Neon Rookie";
+    rankIcon = "⚡";
+    rankColor = "linear-gradient(135deg,#ff00ff,#00ffff)";
+  } else {
+    rank = "First Whisper";
+    rankIcon = "🌱";
+    rankColor = "linear-gradient(135deg,#444,#888)";
+  }
+  
+  return { stats, xp, levelXP, level, rank, rankIcon, rankColor, username };
+}
+
+// Update UI with stats
+function updateUI(){
+  const data = calculateStats();
+  
+  // Update username and avatar
+  document.getElementById('username').textContent = data.username;
+  document.getElementById('userAvatar').textContent = data.username[0].toUpperCase();
+  
+  // Update XP and rank
+  document.getElementById('xpDisplay').textContent = `💎 ${data.xp} XP Earned`;
+  document.getElementById('rankBadge').textContent = `${data.rankIcon} ${data.rank}`;
+  document.getElementById('rankIconLeft').innerHTML = `${data.rankIcon} Rank`;
+  document.getElementById('rankNameLeft').textContent = data.rank;
+  
+  // Update progress bar
+  const progress = (data.levelXP / 1000) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+  document.getElementById('progressText').textContent = `Level Progress: ${Math.floor(progress)}%`;
+  
+  // Update avatar background
+  document.getElementById('userAvatar').style.background = data.rankColor;
+  document.querySelector('.rank-badge').style.background = data.rankColor;
+  
+  // Update left sidebar stats
+  document.getElementById('totalPosts').textContent = data.stats.total;
+  document.getElementById('totalXP').textContent = data.xp;
+  document.getElementById('levelXP').textContent = data.levelXP;
+  document.getElementById('loveCat').textContent = data.stats.love;
+  document.getElementById('sadnessCat').textContent = data.stats.sadness;
+  document.getElementById('joyCat').textContent = data.stats.joy;
+  
+  // Update main stats
+  document.getElementById('statTotal').textContent = data.stats.total;
+  document.getElementById('statLove').textContent = data.stats.love;
+  document.getElementById('statSadness').textContent = data.stats.sadness;
+  document.getElementById('statJoy').textContent = data.stats.joy;
+  
+  // Update right sidebar
+  document.getElementById('streakTotal').textContent = data.stats.total;
+  document.getElementById('streakRank').textContent = data.rank;
+  document.getElementById('xpLevel').textContent = data.level;
+  
+  // Update achievements
+  updateAchievements(data.stats.total);
+}
+
+// Update achievements
+function updateAchievements(total){
+  const grid = document.getElementById('achievementGrid');
+  grid.innerHTML = '';
+  
+  let unlockedCount = 0;
+  
+  achievements.forEach(achievement => {
+    const unlocked = total >= achievement.need;
+    const progress = Math.min(100, (total / achievement.need) * 100);
+    
+    if(unlocked) unlockedCount++;
+    
+    const badge = document.createElement('div');
+    badge.className = `badge ${unlocked ? 'unlocked' : 'locked'}`;
+    badge.innerHTML = `
+      <div class="icon">${achievement.icon}</div>
+      <b>${achievement.title}</b>
+      <p>${achievement.desc}</p>
+      <small>${unlocked ? '✅ Unlocked!' : `🔒 Need ${achievement.need}`}</small>
+      <div class="progress">
+        <div class="bar" style="width:${progress}%"></div>
+      </div>
+    `;
+    grid.appendChild(badge);
+  });
+  
+  // Update unlocked count
+  document.getElementById('unlockedCount').textContent = `${unlockedCount}/${achievements.length}`;
+  
+  // Update next milestone
+  const nextAchievement = achievements.find(a => total < a.need);
+  if(nextAchievement){
+    const remaining = nextAchievement.need - total;
+    document.getElementById('nextMilestone').innerHTML = `
+      <span class="mini-badge-icon">${nextAchievement.icon}</span>
+      <span class="mini-badge-text">${nextAchievement.title}</span>
+      <p style="color:#bffcff;font-size:0.8rem;margin-top:5px;">${remaining} confession${remaining > 1 ? 's' : ''} away</p>
+    `;
+  } else {
+    document.getElementById('nextMilestone').innerHTML = `
+      <span class="mini-badge-icon">🎉</span>
+      <span class="mini-badge-text">All Unlocked!</span>
+      <p style="color:#bffcff;font-size:0.8rem;margin-top:5px;">You're a legend!</p>
+    `;
+  }
+}
+
+// Animate stats on load
+function animateStats(){
+  const data = calculateStats();
+  
+  // Animate numbers
+  animateValue('totalPosts', 0, data.stats.total, 1500);
+  animateValue('totalXP', 0, data.xp, 2000);
+  animateValue('levelXP', 0, data.levelXP, 1800);
+  animateValue('statTotal', 0, data.stats.total, 1500);
+  animateValue('statLove', 0, data.stats.love, 1600);
+  animateValue('statSadness', 0, data.stats.sadness, 1700);
+  animateValue('statJoy', 0, data.stats.joy, 1800);
+}
+
+function animateValue(id, start, end, duration){
+  const element = document.getElementById(id);
+  if(!element) return;
+  
+  const range = end - start;
+  const increment = range / (duration / 16);
+  let current = start;
+  
+  const timer = setInterval(()=>{
+    current += increment;
+    if(current >= end){
+      current = end;
+      clearInterval(timer);
+    }
+    element.textContent = Math.floor(current);
+  }, 16);
+}
+
+// Initialize profile
+updateUI();
+setTimeout(animateStats, 500);
+</script>
+
+</body>
+</html>
